@@ -1,0 +1,28 @@
+{
+  "name": "employeetracker",
+  "version": "1.0.0",
+  "description": "employee database",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hpyorange/employeeTracker.git"
+  },
+  "keywords": [
+    "employee",
+    "tracker"
+  ],
+  "author": "Jasper Cheng",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Hpyorange/employeeTracker/issues"
+  },
+  "homepage": "https://github.com/Hpyorange/employeeTracker#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^9.1.4",
+    "mysql2": "^2.3.3"
+  }
+}
