@@ -133,7 +133,7 @@ userChoose = () =>{
 
 ViewEmployee = () =>{
     console.log('Employees: \n');
-   
+    const query = ``
 
 }
 
