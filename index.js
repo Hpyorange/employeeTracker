@@ -338,7 +338,7 @@ AddRole = () =>{
         {
             type: 'input', 
             name: 'role',
-            message:'Please enter a role that you want to add',
+            message:'Please enter a role that you want to add:',
             validate: value => {
                 if (value) {
                     return true;
@@ -351,7 +351,7 @@ AddRole = () =>{
         {
             type: 'input', 
             name: 'salary',
-            message:'Please enter the salary of this role',
+            message:'Please enter the salary of this role:',
             validate: value => {
                 if (value) {
                     return true;
@@ -376,7 +376,7 @@ AddRole = () =>{
                 {
                     type:'rawlist',
                     name:'department',
-                    message:'Please choose the department for this role',
+                    message:'Please choose the department for this role:',
                     choices:department
                 }
             ])
@@ -402,7 +402,7 @@ AddDepartment = () =>{
         {
             type: 'input', 
             name: 'department',
-            message:'Please enter the department that you want to add',
+            message:'Please enter the department that you want to add:',
             validate: value => {
                 if (value) {
                     return true;
@@ -423,6 +423,93 @@ AddDepartment = () =>{
             if(err)throw err;
             console.log('The department has been added')
             ViewDepartments();
+        })
+    })
+};
+
+DeleteEmployee = () =>{
+    const sql = `SELECT * FROM employee`
+
+    connection.query(sql,(err,res)=>{
+        if(err) throw err
+        const employee = res.map(({id,first_name,last_name})=>({name:`${first_name} ${last_name}`, value:id}))
+
+        inquirer.prompt([
+            {
+                type:'rawlist',
+                name:'eName',
+                message:'Please choose which employee you want to delete:',
+                choices:employee
+            }
+        ])
+        .then(answer=>{
+            const eName= answer.eName;
+
+            const sql =`DELETE FROM employee WHERE id = ?`
+
+            connection.query(sql,eName,(err,res)=>{
+                if(err) throw err
+                console.log('The Employee has been deleted')
+                ViewEmployee();
+            })
+        })
+    })
+};
+
+DeleteRole= () =>{
+    const sql = `SELECT * FROM role`
+
+    connection.query(sql,(err,res)=>{
+        if(err) throw err
+        const role = res.map(({id,title})=>({name:title, value:id}))
+
+        inquirer.prompt([
+            {
+                type:'rawlist',
+                name:'role',
+                message:'Please choose which role you want to delete:',
+                choices:role
+            }
+        ])
+        .then(answer=>{
+            const role= answer.role;
+
+            const sql =`DELETE FROM role WHERE id = ?`
+
+            connection.query(sql,role,(err,res)=>{
+                if(err) throw err
+                console.log('The role has been deleted')
+                ViewRoles();
+            })
+        })
+    })
+};
+
+DeleteDepartment= () =>{
+    const sql = `SELECT * FROM department`
+
+    connection.query(sql,(err,res)=>{
+        if(err) throw err
+        const department = res.map(({id,name})=>({name:name, value:id}))
+
+        inquirer.prompt([
+            {
+                type:'rawlist',
+                name:'department',
+                message:'Please choose which department you want to delete:',
+                choices:department
+            }
+        ])
+        .then(answer=>{
+            const department= answer.department;
+
+            const sql =`DELETE FROM department WHERE id = ?`
+
+            connection.query(sql,department,(err,res)=>{
+                if(err) throw err
+                console.log('The department has been deleted')
+                ViewDepartments();
+            })
         })
     })
 };
