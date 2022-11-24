@@ -132,8 +132,59 @@ userChoose = () =>{
 
 
 ViewEmployee = () =>{
-    console.log('Employees: \n');
-    const query = ``
+    console.log('All Employees: \n');
+    const sql = `SELECT employee.id, 
+    employee.first_name, 
+    employee.last_name, 
+    role.title, 
+    department.name AS department,
+    role.salary, 
+    CONCAT (manager.first_name, " ", manager.last_name) AS manager
+    FROM employee
+    LEFT JOIN role ON employee.role_id = role.id
+    LEFT JOIN department ON role.department_id = department.id
+    LEFT JOIN employee manager ON employee.manager_id = manager.id`
 
-}
+    connection.query(sql, (err, rows) => {
+        if (err) throw err; 
+        console.table(rows);
+        userChoose();
+    });
+};
 
+ViewRoles=()=>{
+    console.log('All Roles: \n');
+    const sql =`SELECT role.id, role.title, department.name AS department
+    FROM role
+    INNER JOIN department ON role.department_id = department.id`
+
+    connection.query(sql, (err, rows) => {
+        if (err) throw err; 
+        console.table(rows);
+        userChoose();
+    });
+};
+
+ViewDepartments=()=>{
+    console.log('All Departments: \n');
+    const sql =`SELECT * FROM department`
+
+    connection.query(sql, (err, rows) => {
+        if (err) throw err; 
+        console.table(rows);
+        userChoose();
+    });
+};
+
+// ViewEmployeeM = () =>{
+//     console.log('Employees by Manager: \n');
+//     const query = `select CONCAT (manager.first_name, " ", manager.last_name) AS Manager_Name, 
+//     CONCAT (employee.first_name, " ", employee.last_name) AS employee_Name
+//     FROM employee
+//     inner join role on employee.role_id = role.id
+//     inner join department on role.department_id = department.id
+//     inner join employee manager on employee.manager_id = manager.id`
+// }
+
+
+init();
