@@ -99,18 +99,6 @@ userChoose = () =>{
             UpdateManager();
         }
 
-        if (choose === "Update An Employee Manager") {
-            UpdateManager();
-        }
-
-        if (choose === "Update An Employee Manager") {
-            UpdateManager();
-        }
-
-        if (choose === "Update An Employee Manager") {
-            UpdateManager();
-        }
-
         if (choose === "Delete A Employee") {
             DeleteEmployee();
         }
@@ -513,6 +501,67 @@ DeleteDepartment= () =>{
         })
     })
 };
+
+UpdateRole = () =>{
+    const sql = `SELECT * FROM employee`
+
+    connection.query(sql,(err,res)=>{
+        if(err) throw err
+        const employee = res.map(({id,first_name,last_name})=>({name:`${first_name} ${last_name}`, value:id}))
+        inquirer.prompt([
+            {
+              type: 'rawlist',
+              name: 'eName',
+              message: `Please choose which employee's role you want to update:`,
+              choices: employee
+            }
+          ])
+        .then(answer=>{
+            const eName = answer.eName
+            const newData = []
+            newData.push(eName);
+    
+            const sql = `SELECT * FROM role`
+    
+            connection.query(sql, (err, data) => {
+                if (err) throw err; 
+      
+                const roles = data.map(({ id, title }) => ({ name: title, value: id }));
+                
+                  inquirer.prompt([
+                    {
+                      type: 'rawlist',
+                      name: 'role',
+                      message: `Please choose the new role for this employee`,
+                      choices: roles
+                    }
+                  ])
+                      .then(answer => {
+                      const role = answer.role;
+                      newData.push(role); 
+                      
+                      let e_id = newData[0]
+                      newData[0] = role
+                      newData[1] = e_id 
+    
+                      console.log(newData)
+                      
+      
+                      const sql = `UPDATE employee SET role_id = ? WHERE id = ?`;
+      
+                      connection.query(sql, newData, (err, result) => {
+                        if (err) throw err;
+                      console.log("The employee has been updated!");
+                    
+                      ViewEmployee();
+            })
+
+            })
+          })
+        })
+        
+    })
+}
 
 
 
