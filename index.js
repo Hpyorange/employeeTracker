@@ -197,6 +197,7 @@ ViewEmployeeM = () =>{
 
 ViewEmployeeD = () => {
     console.log('View Employees by Department: still working on it\n');
+    userChoose();
 }
 
 ViewBudgets = () =>{
@@ -204,7 +205,7 @@ ViewBudgets = () =>{
     const sql = `SELECT 
     department.name AS department,
     SUM(salary) AS budget
-    FROM  role  
+    FROM role  
     JOIN department ON role.department_id = department.id GROUP BY department_id`;
 
     connection.query(sql, (err, rows) => {
@@ -288,7 +289,7 @@ AddEmployee = () =>{
                                 {
                                     type: 'rawlist',
                                     name: 'manager',
-                                    message: "Please choose the manager of this employee",
+                                    message: "Please choose the manager for this employee",
                                     choices: employee 
                                 }
                             ])
@@ -330,6 +331,102 @@ AddEmployee = () =>{
         })
 
     })
-}
+};
+
+AddRole = () =>{
+    inquirer.prompt([
+        {
+            type: 'input', 
+            name: 'role',
+            message:'Please enter a role that you want to add',
+            validate: value => {
+                if (value) {
+                    return true;
+                } else {
+                    console.log('(Request information😳) Please enter the role');
+                    return false;
+                }
+            }
+        },
+        {
+            type: 'input', 
+            name: 'salary',
+            message:'Please enter the salary of this role',
+            validate: value => {
+                if (value) {
+                    return true;
+                } else {
+                    console.log('(Request information😳) Please enter the salary');
+                    return false;
+                }
+            }
+        }
+
+    ])
+    .then(answer=>{
+        const newData = [answer.role,answer.salary];
+
+        const sql = `SELECT * FROM department`
+
+        connection.query(sql,(err,res)=>{
+            if(err)throw err;
+            const department = res.map(({id,name})=>({name:name,value:id}))
+
+            inquirer.prompt([
+                {
+                    type:'rawlist',
+                    name:'department',
+                    message:'Please choose the department for this role',
+                    choices:department
+                }
+            ])
+            .then(answer=>{
+                const dChoose = answer.department;
+                newData.push(dChoose);
+
+                const sql =`INSERT INTO role (title, salary, department_id) 
+                VALUES (?, ?, ?)`
+
+                connection.query(sql,newData,(err,res)=>{
+                    if(err)throw err;
+                    console.log('The role has been added')
+                    ViewRoles();
+                })
+            })
+        })
+    })
+};
+
+AddDepartment = () =>{
+    inquirer.prompt([
+        {
+            type: 'input', 
+            name: 'department',
+            message:'Please enter the department that you want to add',
+            validate: value => {
+                if (value) {
+                    return true;
+                } else {
+                    console.log('(Request information😳) Please enter the department');
+                    return false;
+                }
+            }
+        }
+
+    ])
+    .then(answer=>{
+        const newData = [answer.department];
+
+        const sql = `INSERT INTO department (name) VALUES (?)`
+
+        connection.query(sql,newData,(err,res)=>{
+            if(err)throw err;
+            console.log('The department has been added')
+            ViewDepartments();
+        })
+    })
+};
+
+
 
 init();
