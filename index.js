@@ -154,7 +154,10 @@ ViewEmployee = () =>{
 
 ViewRoles=()=>{
     console.log('All Roles: \n');
-    const sql =`SELECT role.id, role.title, department.name AS department
+    const sql =`SELECT role.title, 
+    role.id, 
+    department.name AS department, 
+    role.salary
     FROM role
     INNER JOIN department ON role.department_id = department.id`
 
@@ -176,15 +179,24 @@ ViewDepartments=()=>{
     });
 };
 
-// ViewEmployeeM = () =>{
-//     console.log('Employees by Manager: \n');
-//     const query = `select CONCAT (manager.first_name, " ", manager.last_name) AS Manager_Name, 
-//     CONCAT (employee.first_name, " ", employee.last_name) AS employee_Name
-//     FROM employee
-//     inner join role on employee.role_id = role.id
-//     inner join department on role.department_id = department.id
-//     inner join employee manager on employee.manager_id = manager.id`
-// }
+ViewEmployeeM = () =>{
+    console.log('View Employees by Manager: \n');
+    const sql = `SELECT CONCAT (manager.first_name, " ", manager.last_name) AS Manager_Name, 
+    CONCAT (employee.first_name, " ", employee.last_name) AS employee_Name
+    FROM employee
+    INNER JOIN role ON employee.role_id = role.id
+    INNER JOIN department ON role.department_id = department.id
+    INNER JOIN employee manager ON employee.manager_id = manager.id`
 
+    connection.query(sql, (err, rows) => {
+        if (err) throw err; 
+        console.table(rows);
+        userChoose();
+    });
+}
+
+ViewEmployeeD = () => {
+    console.log('View Employees by Department: \n');
+}
 
 init();
