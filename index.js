@@ -11,6 +11,9 @@ const connection = mysql.createConnection({
     database: process.env.DB_NAME
 });
 
+
+
+
 const questions = [
     {
         type: 'rawlist',
@@ -133,9 +136,9 @@ ViewEmployee = () =>{
     LEFT JOIN department ON role.department_id = department.id
     LEFT JOIN employee manager ON employee.manager_id = manager.id`
 
-    connection.query(sql, (err, rows) => {
+    connection.query(sql, (err, res) => {
         if (err) throw err; 
-        console.table(rows);
+        console.table(res);
         userChoose();
     });
 };
@@ -149,9 +152,9 @@ ViewRoles=()=>{
     FROM role
     INNER JOIN department ON role.department_id = department.id`
 
-    connection.query(sql, (err, rows) => {
+    connection.query(sql, (err, res) => {
         if (err) throw err; 
-        console.table(rows);
+        console.table(res);
         userChoose();
     });
 };
@@ -160,32 +163,43 @@ ViewDepartments=()=>{
     console.log('All Departments: \n');
     const sql =`SELECT * FROM department`
 
-    connection.query(sql, (err, rows) => {
+    connection.query(sql, (err, res) => {
         if (err) throw err; 
-        console.table(rows);
+        console.table(res);
         userChoose();
     });
 };
 
 ViewEmployeeM = () =>{
     console.log('View Employees by Manager: \n');
-    const sql = `SELECT CONCAT (manager.first_name, " ", manager.last_name) AS Manager_Name, 
-    CONCAT (employee.first_name, " ", employee.last_name) AS employee_Name
+    const sql = `SELECT CONCAT (employee.first_name, " ", employee.last_name) AS employee_Name,
+    CONCAT (manager.first_name, " ", manager.last_name) AS Manager_Name
     FROM employee
     INNER JOIN role ON employee.role_id = role.id
     INNER JOIN department ON role.department_id = department.id
     INNER JOIN employee manager ON employee.manager_id = manager.id`
 
-    connection.query(sql, (err, rows) => {
+    connection.query(sql, (err, res) => {
         if (err) throw err; 
-        console.table(rows);
+        console.table(res);
         userChoose();
     });
 }
 
 ViewEmployeeD = () => {
-    console.log('View Employees by Department: still working on it\n');
-    userChoose();
+    console.log('View Employees by Department: \n');
+    const sql = `SELECT department.name AS department,
+    CONCAT(employee.first_name, " ", employee.last_name) AS employee_Name
+    FROM employee
+    join role on employee.role_id = role.id
+    join department on role.department_id = department.id`
+
+    connection.query(sql, (err, res) => {
+        if (err) throw err; 
+        console.table(res);
+        userChoose();
+    });
+
 }
 
 ViewBudgets = () =>{
@@ -196,9 +210,9 @@ ViewBudgets = () =>{
     FROM role  
     JOIN department ON role.department_id = department.id GROUP BY department_id`;
 
-    connection.query(sql, (err, rows) => {
+    connection.query(sql, (err, res) => {
     if (err) throw err; 
-    console.table(rows);
+    console.table(res);
 
     userChoose();
     });
@@ -541,9 +555,10 @@ UpdateRole = () =>{
                       newData.push(role); 
                       
                       let e_id = newData[0]
+                      console.log(newData)
                       newData[0] = role
+                      console.log(newData)
                       newData[1] = e_id 
-    
                       console.log(newData)
                       
       
@@ -561,7 +576,12 @@ UpdateRole = () =>{
         })
         
     })
-}
+};
+
+UpdateManager = ()=>{
+    console.log('Still working on it \n')
+    userChoose();
+};
 
 
 
