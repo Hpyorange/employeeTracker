@@ -4,7 +4,7 @@
 
   ## Description
   This application is a employee tacker(CMS). Users able to view and manage the departments, roles, and employees.
-  ## Web_Img
+  ## App_Img
   ![Web brief](img/app-sample.png "Web sample")
 
   ## Table of Contents
