@@ -11,9 +11,6 @@ const connection = mysql.createConnection({
     database: process.env.DB_NAME
 });
 
-
-
-
 const questions = [
     {
         type: 'rawlist',
