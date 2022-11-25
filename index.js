@@ -577,10 +577,66 @@ UpdateRole = () =>{
         
     })
 };
+UpdateManager = () =>{
+    const sql = `SELECT * FROM employee`
 
-UpdateManager = ()=>{
-    console.log('Still working on it \n')
-    userChoose();
+    connection.query(sql,(err,res)=>{
+        if(err) throw err
+        const employee = res.map(({id,first_name,last_name})=>({name:`${first_name} ${last_name}`, value:id}))
+        inquirer.prompt([
+            {
+              type: 'rawlist',
+              name: 'eName',
+              message: `Please choose which employee's manager you want to update:`,
+              choices: employee
+            }
+          ])
+        .then(answer=>{
+            const eName = answer.eName
+            const newData = []
+            newData.push(eName);
+    
+            const sql = `SELECT * FROM employee`
+    
+            connection.query(sql, (err, data) => {
+                if (err) throw err; 
+      
+                const manger = data.map(({id,first_name,last_name})=>({name:`${first_name} ${last_name}`, value:id}));
+                
+                  inquirer.prompt([
+                    {
+                        type: 'rawlist',
+                        name: 'manager',
+                        message: "Please choose the manager for this employee",
+                        choices: manger 
+                    }
+                  ])
+                      .then(answer => {
+                      const manger = answer.manager;
+                      newData.push(manger); 
+                      
+                      let e_id = newData[0]
+                      console.log(newData)
+                      newData[0] = manger
+                      console.log(newData)
+                      newData[1] = e_id 
+                      console.log(newData)
+                      
+      
+                      const sql = `UPDATE employee SET manager_id = ? WHERE id = ?`;
+      
+                      connection.query(sql, newData, (err, result) => {
+                        if (err) throw err;
+                      console.log("The employee's manager has been updated!");
+                    
+                      ViewEmployee();
+            })
+
+            })
+          })
+        })
+        
+    })
 };
 
 
